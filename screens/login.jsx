@@ -5,7 +5,7 @@ import LottieView from "lottie-react-native";
 import { SpeedDial } from "@rneui/themed";
 import { useState } from "react";
 
-const Login = () => {
+const Login = ({ navigation }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -150,6 +150,7 @@ const Login = () => {
             ></TextInput>
           </View>
           <FAB
+            onPress={() => navigation.navigate("client")}
             visible={true}
             title="Login"
             upperCase
