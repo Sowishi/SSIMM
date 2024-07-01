@@ -156,6 +156,13 @@ const Login = ({ navigation }) => {
             upperCase
             icon={{ name: "login", color: "white" }}
           />
+          <FAB
+            onPress={() => navigation.navigate("admin")}
+            visible={true}
+            title="Admin"
+            upperCase
+            icon={{ name: "login", color: "white" }}
+          />
         </View>
         <View
           style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}
