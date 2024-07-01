@@ -1,9 +1,18 @@
-import { FlatList, Text, View } from "react-native";
+import {
+  FlatList,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Constants from "expo-constants";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { ListItem } from "react-native-elements";
+import { ListItem, SpeedDial } from "react-native-elements";
 import { Button } from "@rneui/themed";
 import { LinearGradient } from "expo-linear-gradient";
+import { useState } from "react";
+import { TextInput } from "react-native";
 
 const Admin = () => {
   const data = [
@@ -13,6 +22,9 @@ const Admin = () => {
     { id: "4", title: "Item 4" },
     { id: "5", title: "Item 5" },
   ];
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const renderItem = ({ item }) => (
     <ListItem.Swipeable
@@ -74,6 +86,220 @@ const Admin = () => {
       <View>
         <FlatList data={data} renderItem={renderItem} />
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={{ flex: 1, justifyContent: "flex-end" }}>
+          <View style={{ height: 450, backgroundColor: "white" }}>
+            <Text style={{ fontSize: 25, fontWeight: "bold", margin: 20 }}>
+              Add User
+            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                margin: 20,
+                position: "relative",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 100,
+                  width: 50,
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: 10,
+                  left: 0,
+                  top: 0,
+                  zIndex: 2,
+                  position: "absolute",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+
+                  elevation: 5,
+                }}
+              >
+                <FontAwesome5 name="user" size={15} color="#4157BC" />
+              </View>
+              <TextInput
+                style={{
+                  flex: 1,
+                  paddingVertical: 10,
+                  backgroundColor: "white",
+                  borderRadius: 20,
+                  paddingLeft: 30,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+
+                  elevation: 5,
+                  marginLeft: 30,
+                }}
+                placeholder="Username"
+              ></TextInput>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                margin: 20,
+                position: "relative",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 100,
+                  width: 50,
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: 10,
+                  left: 0,
+                  top: 0,
+                  zIndex: 2,
+                  position: "absolute",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+
+                  elevation: 5,
+                }}
+              >
+                <FontAwesome5 name="phone" size={15} color="#4157BC" />
+              </View>
+              <TextInput
+                style={{
+                  flex: 1,
+                  paddingVertical: 10,
+                  backgroundColor: "white",
+                  borderRadius: 20,
+                  paddingLeft: 30,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+
+                  elevation: 5,
+                  marginLeft: 30,
+                }}
+                placeholder="Phone Number"
+              ></TextInput>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                margin: 20,
+                position: "relative",
+              }}
+            >
+              <View
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: 100,
+                  width: 50,
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: 10,
+                  left: 0,
+                  top: 0,
+                  zIndex: 2,
+                  position: "absolute",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+
+                  elevation: 5,
+                }}
+              >
+                <FontAwesome5 name="lock" size={15} color="#4157BC" />
+              </View>
+              <TextInput
+                style={{
+                  flex: 1,
+                  paddingVertical: 10,
+                  backgroundColor: "white",
+                  borderRadius: 20,
+                  paddingLeft: 30,
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 3.84,
+
+                  elevation: 5,
+                  marginLeft: 30,
+                }}
+                placeholder="Password"
+              ></TextInput>
+            </View>
+            <Button
+              buttonStyle={{ margin: 20 }}
+              ViewComponent={LinearGradient} // Don't forget this!
+              linearGradientProps={{
+                colors: ["#5A9AE6", "#7FDC67"],
+                start: { x: 0, y: 0.5 },
+                end: { x: 1, y: 0.5 },
+              }}
+            >
+              Add User
+            </Button>
+          </View>
+        </View>
+      </Modal>
+
+      <SpeedDial
+        style={{ zIndex: 9999 }}
+        isOpen={open}
+        icon={{ name: "person", color: "#fff" }}
+        openIcon={{ name: "close", color: "#fff" }}
+        onOpen={() => setOpen(!open)}
+        onClose={() => setOpen(!open)}
+      >
+        <SpeedDial.Action
+          icon={{ name: "person", color: "#fff" }}
+          title="Add User"
+          onPress={() => setModalVisible(true)}
+        />
+        <SpeedDial.Action
+          icon={{ name: "logout", color: "#fff" }}
+          title="Log out"
+          onPress={() =>
+            Linking.openURL(
+              "https://www.facebook.com/profile.php?id=100073436105134"
+            )
+          }
+        />
+      </SpeedDial>
     </View>
   );
 };
