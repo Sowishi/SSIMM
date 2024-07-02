@@ -1,12 +1,11 @@
 import "react-native-gesture-handler";
-
-import { Text } from "react-native";
 import Login from "./screens/login";
 import { createStackNavigator } from "@react-navigation/stack";
 import Client from "./screens/client";
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import Admin from "./screens/admin";
+import Toast from "react-native-toast-message";
 
 const Stack = createStackNavigator();
 
@@ -21,6 +20,7 @@ const App = () => {
           <Stack.Screen name="admin" component={Admin} />
         </Stack.Navigator>
       </NavigationContainer>
+      <Toast />
     </>
   );
 };

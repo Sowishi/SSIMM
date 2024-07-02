@@ -1,8 +1,8 @@
 import {
+  ActivityIndicator,
   FlatList,
+  Image,
   Modal,
-  Pressable,
-  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -11,10 +11,11 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { ListItem, SpeedDial } from "react-native-elements";
 import { Button } from "@rneui/themed";
 import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
-import { TextInput } from "react-native";
-import useAddUser from "../hooks/useAddUser";
+import { useEffect, useState } from "react";
 import CustomTextInput from "../components/customTextInput";
+import Toast from "react-native-toast-message";
+import useAddUser from "../hooks/useAddUser";
+import useGetUsers from "../hooks/useGetUsers";
 
 const Admin = () => {
   const data = [
@@ -26,7 +27,8 @@ const Admin = () => {
   ];
 
   //Hooks
-  const { addUser } = useAddUser();
+  const { addUser, error, loading } = useAddUser();
+  const { users, loading: getUserLoading } = useGetUsers();
 
   //State
 
@@ -67,9 +69,12 @@ const Admin = () => {
         </View>
       }
     >
-      <FontAwesome5 name="user" size={27} />
+      <Image
+        source={{ uri: item.profilePic }}
+        style={{ width: 40, height: 40 }}
+      />
       <ListItem.Content>
-        <ListItem.Title>{item.title}</ListItem.Title>
+        <ListItem.Title>{item.username}</ListItem.Title>
       </ListItem.Content>
       <ListItem.Chevron />
     </ListItem.Swipeable>
@@ -80,7 +85,15 @@ const Admin = () => {
     setUserData(newUserData);
   };
 
-  console.log(userData);
+  useEffect(() => {
+    if (error) {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error,
+      });
+    }
+  }, [error]);
 
   return (
     <View
@@ -103,7 +116,7 @@ const Admin = () => {
         <FontAwesome5 name="user" size={27} />
       </View>
       <View>
-        <FlatList data={data} renderItem={renderItem} />
+        <FlatList data={users} renderItem={renderItem} />
       </View>
 
       <Modal
@@ -137,7 +150,16 @@ const Admin = () => {
             />
 
             <Button
-              onPress={() => addUser({ name: "Fd", jm: "FD" })}
+              onPress={() => {
+                addUser(userData);
+                setModalVisible(false);
+                Toast.show({
+                  type: "success",
+                  text1: "Success",
+                  text2: "Successfull Added User",
+                });
+                setUserData({ username: "", password: "", phone: "" });
+              }}
               buttonStyle={{ margin: 20 }}
               ViewComponent={LinearGradient} // Don't forget this!
               linearGradientProps={{
@@ -146,7 +168,7 @@ const Admin = () => {
                 end: { x: 1, y: 0.5 },
               }}
             >
-              Add User
+              {loading ? <ActivityIndicator /> : "Add User"}
             </Button>
           </View>
         </View>
