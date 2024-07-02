@@ -13,6 +13,8 @@ import { Button } from "@rneui/themed";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { TextInput } from "react-native";
+import useAddUser from "../hooks/useAddUser";
+import CustomTextInput from "../components/customTextInput";
 
 const Admin = () => {
   const data = [
@@ -23,8 +25,18 @@ const Admin = () => {
     { id: "5", title: "Item 5" },
   ];
 
+  //Hooks
+  const { addUser } = useAddUser();
+
+  //State
+
   const [modalVisible, setModalVisible] = useState(false);
   const [open, setOpen] = useState(false);
+  const [userData, setUserData] = useState({
+    username: "",
+    phone: "",
+    password: "",
+  });
 
   const renderItem = ({ item }) => (
     <ListItem.Swipeable
@@ -63,6 +75,13 @@ const Admin = () => {
     </ListItem.Swipeable>
   );
 
+  const handleUserDataChange = (name, text) => {
+    const newUserData = { ...userData, [name]: text };
+    setUserData(newUserData);
+  };
+
+  console.log(userData);
+
   return (
     <View
       style={{
@@ -100,169 +119,25 @@ const Admin = () => {
             <Text style={{ fontSize: 25, fontWeight: "bold", margin: 20 }}>
               Add User
             </Text>
-            <View
-              style={{
-                flexDirection: "row",
-                margin: 20,
-                position: "relative",
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: 100,
-                  width: 50,
-                  height: 50,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 10,
-                  left: 0,
-                  top: 0,
-                  zIndex: 2,
-                  position: "absolute",
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
 
-                  elevation: 5,
-                }}
-              >
-                <FontAwesome5 name="user" size={15} color="#4157BC" />
-              </View>
-              <TextInput
-                style={{
-                  flex: 1,
-                  paddingVertical: 10,
-                  backgroundColor: "white",
-                  borderRadius: 20,
-                  paddingLeft: 30,
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
+            <CustomTextInput
+              title={"Username"}
+              icon="user"
+              handleChange={(text) => handleUserDataChange("username", text)}
+            />
+            <CustomTextInput
+              title={"Phone"}
+              icon={"phone"}
+              handleChange={(text) => handleUserDataChange("phone", text)}
+            />
+            <CustomTextInput
+              icon={"lock"}
+              title={"Password"}
+              handleChange={(text) => handleUserDataChange("password", text)}
+            />
 
-                  elevation: 5,
-                  marginLeft: 30,
-                }}
-                placeholder="Username"
-              ></TextInput>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                margin: 20,
-                position: "relative",
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: 100,
-                  width: 50,
-                  height: 50,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 10,
-                  left: 0,
-                  top: 0,
-                  zIndex: 2,
-                  position: "absolute",
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-
-                  elevation: 5,
-                }}
-              >
-                <FontAwesome5 name="phone" size={15} color="#4157BC" />
-              </View>
-              <TextInput
-                style={{
-                  flex: 1,
-                  paddingVertical: 10,
-                  backgroundColor: "white",
-                  borderRadius: 20,
-                  paddingLeft: 30,
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-
-                  elevation: 5,
-                  marginLeft: 30,
-                }}
-                placeholder="Phone Number"
-              ></TextInput>
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                margin: 20,
-                position: "relative",
-              }}
-            >
-              <View
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: 100,
-                  width: 50,
-                  height: 50,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: 10,
-                  left: 0,
-                  top: 0,
-                  zIndex: 2,
-                  position: "absolute",
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-
-                  elevation: 5,
-                }}
-              >
-                <FontAwesome5 name="lock" size={15} color="#4157BC" />
-              </View>
-              <TextInput
-                style={{
-                  flex: 1,
-                  paddingVertical: 10,
-                  backgroundColor: "white",
-                  borderRadius: 20,
-                  paddingLeft: 30,
-                  shadowColor: "#000",
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.25,
-                  shadowRadius: 3.84,
-
-                  elevation: 5,
-                  marginLeft: 30,
-                }}
-                placeholder="Password"
-              ></TextInput>
-            </View>
             <Button
+              onPress={() => addUser({ name: "Fd", jm: "FD" })}
               buttonStyle={{ margin: 20 }}
               ViewComponent={LinearGradient} // Don't forget this!
               linearGradientProps={{
