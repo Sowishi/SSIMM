@@ -19,7 +19,7 @@ const useGetUsers = () => {
     setLoading(false);
   }, []);
 
-  return { users };
+  return { users, loading };
 };
 
 export default useGetUsers;

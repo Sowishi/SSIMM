@@ -4,6 +4,7 @@ import {
   Image,
   Modal,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 import Constants from "expo-constants";
@@ -16,24 +17,23 @@ import CustomTextInput from "../components/customTextInput";
 import Toast from "react-native-toast-message";
 import useAddUser from "../hooks/useAddUser";
 import useGetUsers from "../hooks/useGetUsers";
+import useUpdateUser from "../hooks/useUpdateUser";
+import useDeleteUser from "../hooks/useDeleteUser";
 
 const Admin = () => {
-  const data = [
-    { id: "1", title: "Item 1" },
-    { id: "2", title: "Item 2" },
-    { id: "3", title: "Item 3" },
-    { id: "4", title: "Item 4" },
-    { id: "5", title: "Item 5" },
-  ];
-
   //Hooks
   const { addUser, error, loading } = useAddUser();
   const { users, loading: getUserLoading } = useGetUsers();
+  const { updateUser } = useUpdateUser();
+  const { deleteUser } = useDeleteUser();
 
   //State
 
-  const [modalVisible, setModalVisible] = useState(false);
+  const [addUserModal, setAddUserModal] = useState(false);
+  const [viewUserModal, setViewUserModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [open, setOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [userData, setUserData] = useState({
     username: "",
     phone: "",
@@ -41,7 +41,11 @@ const Admin = () => {
   });
 
   const renderItem = ({ item }) => (
-    <ListItem.Swipeable
+    <ListItem
+      onPress={() => {
+        setViewUserModal(true);
+        setSelectedUser(item);
+      }}
       style={{
         borderBottomWidth: 0.5,
         borderBottomColor: "gray",
@@ -55,19 +59,6 @@ const Admin = () => {
 
         elevation: 2,
       }}
-      rightContent={
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Button
-            buttonStyle={{ minHeight: "100%", backgroundColor: "red" }}
-            ViewComponent={LinearGradient} // Don't forget this!
-            linearGradientProps={{
-              colors: ["#F44336", "#FF9800"],
-            }}
-          >
-            Delete User
-          </Button>
-        </View>
-      }
     >
       <Image
         source={{ uri: item.profilePic }}
@@ -77,7 +68,7 @@ const Admin = () => {
         <ListItem.Title>{item.username}</ListItem.Title>
       </ListItem.Content>
       <ListItem.Chevron />
-    </ListItem.Swipeable>
+    </ListItem>
   );
 
   const handleUserDataChange = (name, text) => {
@@ -115,16 +106,16 @@ const Admin = () => {
         </Text>
         <FontAwesome5 name="user" size={27} />
       </View>
-      <View>
+      <View style={{ margin: 10 }}>
         <FlatList data={users} renderItem={renderItem} />
       </View>
-
+      {/* //Add User Modal */}
       <Modal
         animationType="slide"
         transparent={true}
-        visible={modalVisible}
+        visible={addUserModal}
         onRequestClose={() => {
-          setModalVisible(!modalVisible);
+          setAddUserModal(!addUserModal);
         }}
       >
         <View style={{ flex: 1, justifyContent: "flex-end" }}>
@@ -152,7 +143,7 @@ const Admin = () => {
             <Button
               onPress={() => {
                 addUser(userData);
-                setModalVisible(false);
+                setAddUserModal(false);
                 Toast.show({
                   type: "success",
                   text1: "Success",
@@ -173,7 +164,146 @@ const Admin = () => {
           </View>
         </View>
       </Modal>
+      {/* //View User Modal */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={viewUserModal}
+        onRequestClose={() => {
+          setViewUserModal(!viewUserModal);
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#21212199",
+          }}
+        >
+          <View
+            style={{
+              height: 550,
+              width: "100%",
+              backgroundColor: "white",
+              padding: 20,
+            }}
+          >
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <View style={{ position: "relative" }}>
+                <TouchableOpacity
+                  onPress={() => setDeleteModal(true)}
+                  style={{ position: "absolute", right: -5, zIndex: 2 }}
+                >
+                  <FontAwesome5 name="trash" color="red" size={25} />
+                </TouchableOpacity>
+                <Image
+                  source={{ uri: selectedUser?.profilePic }}
+                  style={{ width: 100, height: 100 }}
+                />
+              </View>
 
+              <Text style={{ fontSize: 30, fontWeight: "bold" }}>
+                {selectedUser?.username}
+              </Text>
+            </View>
+            <CustomTextInput
+              handleChange={(text) => handleUserDataChange("username", text)}
+              title={selectedUser?.username}
+              icon={"user"}
+            />
+            <CustomTextInput
+              handleChange={(text) => handleUserDataChange("phone", text)}
+              title={selectedUser?.phone}
+              icon={"phone"}
+            />
+            <CustomTextInput
+              handleChange={(text) => handleUserDataChange("password", text)}
+              title={selectedUser?.password}
+              icon={"lock"}
+            />
+            <Button
+              onPress={() => {
+                updateUser(userData, selectedUser?.id);
+                setViewUserModal(false);
+              }}
+              buttonStyle={{ margin: 20 }}
+              ViewComponent={LinearGradient} // Don't forget this!
+              linearGradientProps={{
+                colors: ["#5A9AE6", "#7FDC67"],
+                start: { x: 0, y: 0.5 },
+                end: { x: 1, y: 0.5 },
+              }}
+            >
+              Update User
+            </Button>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={deleteModal}
+        onRequestClose={() => {
+          setDeleteModal(!deleteModal);
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "#21212199",
+          }}
+        >
+          <View
+            style={{
+              height: 200,
+              width: "100%",
+              backgroundColor: "white",
+              padding: 20,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text
+              style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}
+            >
+              Are you sure you want to delete, {selectedUser?.username}?
+            </Text>
+            <View style={{ flexDirection: "row" }}>
+              <Button
+                onPress={() => setDeleteModal(false)}
+                buttonStyle={{ margin: 20 }}
+                ViewComponent={LinearGradient} // Don't forget this!
+                linearGradientProps={{
+                  colors: ["#5A9AE6", "#7FDC67"],
+                  start: { x: 0, y: 0.5 },
+                  end: { x: 1, y: 0.5 },
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                onPress={() => {
+                  deleteUser(selectedUser?.id);
+                  setDeleteModal(false);
+                  setViewUserModal(false);
+                }}
+                buttonStyle={{ margin: 20 }}
+                ViewComponent={LinearGradient} // Don't forget this!
+                linearGradientProps={{
+                  colors: ["red", "orange"],
+                  start: { x: 0, y: 0.5 },
+                  end: { x: 1, y: 0.5 },
+                }}
+              >
+                Delete User
+              </Button>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <SpeedDial
         style={{ zIndex: 9999 }}
         isOpen={open}
@@ -185,7 +315,7 @@ const Admin = () => {
         <SpeedDial.Action
           icon={{ name: "person", color: "#fff" }}
           title="Add User"
-          onPress={() => setModalVisible(true)}
+          onPress={() => setAddUserModal(true)}
         />
         <SpeedDial.Action
           icon={{ name: "logout", color: "#fff" }}
