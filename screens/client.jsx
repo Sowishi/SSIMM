@@ -1,14 +1,16 @@
-import { Linking, ScrollView, Text, View } from "react-native";
+import { Image, Linking, ScrollView, Text, View } from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import LottieView from "lottie-react-native";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { SpeedDial } from "react-native-elements";
+import { AuthContext } from "../context/authContext";
 
-const Client = () => {
+const Client = ({ navigation }) => {
   const [open, setOpen] = useState(false);
+  const { user } = useContext(AuthContext);
 
   return (
     <View
@@ -38,11 +40,7 @@ const Client = () => {
         <SpeedDial.Action
           icon={{ name: "logout", color: "#fff" }}
           title="Log out"
-          onPress={() =>
-            Linking.openURL(
-              "https://www.facebook.com/profile.php?id=100073436105134"
-            )
-          }
+          onPress={() => navigation.navigate("login")}
         />
       </SpeedDial>
 
@@ -66,14 +64,12 @@ const Client = () => {
                 alignItems: "center",
               }}
             >
-              <FontAwesome5
-                style={{ marginRight: 5 }}
-                name="user"
-                size={18}
-                color="white"
+              <Image
+                source={{ uri: user?.profilePic }}
+                style={{ width: 30, height: 30 }}
               />
-              <Text style={{ fontSize: 25, color: "white" }}>
-                Jhon Michael Molina
+              <Text style={{ fontSize: 25, color: "white", marginLeft: 10 }}>
+                {user?.username}
               </Text>
             </View>
 
@@ -82,6 +78,7 @@ const Client = () => {
                 flexDirection: "row",
                 justifyContent: "flex-start",
                 alignItems: "center",
+                marginTop: 5,
               }}
             >
               <FontAwesome5

@@ -1,7 +1,7 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { TextInput, View } from "react-native";
 
-const CustomTextInput = ({ handleChange, title, icon, value }) => {
+const CustomTextInput = ({ handleChange, title, icon, value, secured }) => {
   return (
     <View
       style={{
@@ -38,6 +38,7 @@ const CustomTextInput = ({ handleChange, title, icon, value }) => {
       </View>
       <TextInput
         value={value}
+        secureTextEntry={secured}
         onChangeText={handleChange}
         style={{
           flex: 1,

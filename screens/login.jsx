@@ -3,11 +3,43 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { FAB } from "@rneui/themed";
 import LottieView from "lottie-react-native";
 import { SpeedDial } from "@rneui/themed";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import CustomTextInput from "../components/customTextInput";
+import useGetUsers from "../hooks/useGetUsers";
+import { AuthContext } from "../context/authContext";
+import Toast from "react-native-toast-message";
 
 const Login = ({ navigation }) => {
   const [open, setOpen] = useState(false);
+  const [username, setUsername] = useState();
+  const [password, setPassword] = useState();
 
+  const { users } = useGetUsers();
+  const { setUser } = useContext(AuthContext);
+
+  const handleLogin = () => {
+    let userFound = false;
+    users.map((user) => {
+      if (
+        user.username.trim() == username?.trim() &&
+        user.password.trim() == password?.trim()
+      ) {
+        setUser(user);
+        userFound = true;
+        if (user.role == "admin") {
+          navigation.navigate("admin");
+        } else {
+          navigation.navigate("client");
+        }
+      }
+    });
+    if (!userFound) {
+      Toast.show({
+        type: "error",
+        text1: "Invalid username or password",
+      });
+    }
+  };
   return (
     <View
       style={{
@@ -41,125 +73,22 @@ const Login = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-          <View
-            style={{
-              flexDirection: "row",
-              margin: 20,
-              position: "relative",
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: "white",
-                borderRadius: 100,
-                width: 50,
-                height: 50,
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 10,
-                left: 0,
-                top: 0,
-                zIndex: 2,
-                position: "absolute",
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
+          <CustomTextInput
+            title={"Username"}
+            icon={"user"}
+            handleChange={(text) => setUsername(text)}
+          />
+          <CustomTextInput
+            secured
+            title={"Password"}
+            icon={"lock"}
+            handleChange={(text) => setPassword(text)}
+          />
 
-                elevation: 5,
-              }}
-            >
-              <FontAwesome5 name="user" size={15} color="#4157BC" />
-            </View>
-            <TextInput
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                backgroundColor: "white",
-                borderRadius: 20,
-                paddingLeft: 30,
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-
-                elevation: 5,
-                marginLeft: 30,
-              }}
-              placeholder="Username"
-            ></TextInput>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              margin: 20,
-              position: "relative",
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: "white",
-                borderRadius: 100,
-                width: 50,
-                height: 50,
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 10,
-                left: 0,
-                top: 0,
-                zIndex: 2,
-                position: "absolute",
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-
-                elevation: 5,
-              }}
-            >
-              <FontAwesome5 name="lock" size={15} color="#4157BC" />
-            </View>
-            <TextInput
-              style={{
-                flex: 1,
-                paddingVertical: 10,
-                backgroundColor: "white",
-                borderRadius: 20,
-                paddingLeft: 30,
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-
-                elevation: 5,
-                marginLeft: 30,
-              }}
-              placeholder="Password"
-            ></TextInput>
-          </View>
           <FAB
-            onPress={() => navigation.navigate("client")}
+            onPress={handleLogin}
             visible={true}
             title="Login"
-            upperCase
-            icon={{ name: "login", color: "white" }}
-          />
-          <FAB
-            onPress={() => navigation.navigate("admin")}
-            visible={true}
-            title="Admin"
             upperCase
             icon={{ name: "login", color: "white" }}
           />

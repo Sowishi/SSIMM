@@ -20,7 +20,7 @@ import useGetUsers from "../hooks/useGetUsers";
 import useUpdateUser from "../hooks/useUpdateUser";
 import useDeleteUser from "../hooks/useDeleteUser";
 
-const Admin = () => {
+const Admin = ({ navigation }) => {
   //Hooks
   const { addUser, error, loading } = useAddUser();
   const { users, loading: getUserLoading } = useGetUsers();
@@ -320,11 +320,7 @@ const Admin = () => {
         <SpeedDial.Action
           icon={{ name: "logout", color: "#fff" }}
           title="Log out"
-          onPress={() =>
-            Linking.openURL(
-              "https://www.facebook.com/profile.php?id=100073436105134"
-            )
-          }
+          onPress={() => navigation.navigate("login")}
         />
       </SpeedDial>
     </View>
