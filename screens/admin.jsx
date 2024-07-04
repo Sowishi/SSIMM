@@ -19,6 +19,9 @@ import useAddUser from "../hooks/useAddUser";
 import useGetUsers from "../hooks/useGetUsers";
 import useUpdateUser from "../hooks/useUpdateUser";
 import useDeleteUser from "../hooks/useDeleteUser";
+import { useFonts } from "expo-font";
+import UserCard from "../components/userCard";
+import CustomModal from "../components/customModal";
 
 const Admin = ({ navigation }) => {
   //Hooks
@@ -26,6 +29,28 @@ const Admin = ({ navigation }) => {
   const { users, loading: getUserLoading } = useGetUsers();
   const { updateUser } = useUpdateUser();
   const { deleteUser } = useDeleteUser();
+  const [loaded] = useFonts({
+    Kanit: require("../assets/Kanit-Regular.ttf"),
+  });
+
+  if (!loaded) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "white",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <LottieView
+          autoPlay
+          style={{ minWidth: 300, minHeight: 300 }}
+          source={require("../assets/loading.json")}
+        ></LottieView>
+      </View>
+    );
+  }
 
   //State
 
@@ -39,37 +64,6 @@ const Admin = ({ navigation }) => {
     phone: "",
     password: "",
   });
-
-  const renderItem = ({ item }) => (
-    <ListItem
-      onPress={() => {
-        setViewUserModal(true);
-        setSelectedUser(item);
-      }}
-      style={{
-        borderBottomWidth: 0.5,
-        borderBottomColor: "gray",
-        backgroundColor: "white",
-        shadowOffset: {
-          width: 0,
-          height: 1,
-        },
-        shadowOpacity: 0.2,
-        shadowRadius: 1.41,
-
-        elevation: 2,
-      }}
-    >
-      <Image
-        source={{ uri: item.profilePic }}
-        style={{ width: 40, height: 40 }}
-      />
-      <ListItem.Content>
-        <ListItem.Title>{item.username}</ListItem.Title>
-      </ListItem.Content>
-      <ListItem.Chevron />
-    </ListItem>
-  );
 
   const handleUserDataChange = (name, text) => {
     const newUserData = { ...userData, [name]: text };
@@ -101,56 +95,149 @@ const Admin = ({ navigation }) => {
           justifyContent: "start",
         }}
       >
-        <Text style={{ fontSize: 25, margin: 20, fontWeight: "bold" }}>
+        <Text
+          style={{
+            fontSize: 25,
+            margin: 20,
+            fontFamily: "Kanit",
+          }}
+        >
           Users Management
         </Text>
-        <FontAwesome5 name="user" size={27} />
+        <FontAwesome5 name="user" size={20} />
       </View>
       <View style={{ margin: 10 }}>
-        <FlatList data={users} renderItem={renderItem} />
+        <FlatList
+          data={users}
+          renderItem={({ item }) => (
+            <UserCard
+              item={item}
+              setViewUserModal={setViewUserModal}
+              setSelectedUser={setSelectedUser}
+            />
+          )}
+        />
       </View>
       {/* //Add User Modal */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={addUserModal}
-        onRequestClose={() => {
-          setAddUserModal(!addUserModal);
-        }}
+      <CustomModal
+        open={addUserModal}
+        handleClose={() => setAddUserModal(false)}
+        modalAnimation={"slide"}
       >
-        <View style={{ flex: 1, justifyContent: "flex-end" }}>
-          <View style={{ height: 450, backgroundColor: "white" }}>
-            <Text style={{ fontSize: 25, fontWeight: "bold", margin: 20 }}>
-              Add User
-            </Text>
+        <Text style={{ fontSize: 25, fontWeight: "bold", margin: 20 }}>
+          Add User
+        </Text>
 
-            <CustomTextInput
-              title={"Username"}
-              icon="user"
-              handleChange={(text) => handleUserDataChange("username", text)}
-            />
-            <CustomTextInput
-              title={"Phone"}
-              icon={"phone"}
-              handleChange={(text) => handleUserDataChange("phone", text)}
-            />
-            <CustomTextInput
-              icon={"lock"}
-              title={"Password"}
-              handleChange={(text) => handleUserDataChange("password", text)}
-            />
+        <CustomTextInput
+          title={"Username"}
+          icon="user"
+          handleChange={(text) => handleUserDataChange("username", text)}
+        />
+        <CustomTextInput
+          title={"Phone"}
+          icon={"phone"}
+          handleChange={(text) => handleUserDataChange("phone", text)}
+        />
+        <CustomTextInput
+          icon={"lock"}
+          title={"Password"}
+          handleChange={(text) => handleUserDataChange("password", text)}
+        />
 
+        <Button
+          onPress={() => {
+            addUser(userData);
+            setAddUserModal(false);
+            Toast.show({
+              type: "success",
+              text1: "Success",
+              text2: "Successfull Added User",
+            });
+            setUserData({ username: "", password: "", phone: "" });
+          }}
+          buttonStyle={{ margin: 20 }}
+          ViewComponent={LinearGradient} // Don't forget this!
+          linearGradientProps={{
+            colors: ["#5A9AE6", "#7FDC67"],
+            start: { x: 0, y: 0.5 },
+            end: { x: 1, y: 0.5 },
+          }}
+        >
+          {loading ? <ActivityIndicator /> : "Add User"}
+        </Button>
+      </CustomModal>
+
+      {/* //View User Modal */}
+      <CustomModal
+        open={viewUserModal}
+        modalAnimation={"fade"}
+        handleClose={() => setViewUserModal(false)}
+      >
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <View style={{ position: "relative" }}>
+            <TouchableOpacity
+              onPress={() => setDeleteModal(true)}
+              style={{ position: "absolute", right: -5, zIndex: 2 }}
+            >
+              <FontAwesome5 name="trash" color="red" size={25} />
+            </TouchableOpacity>
+            <Image
+              source={{ uri: selectedUser?.profilePic }}
+              style={{ width: 100, height: 100 }}
+            />
+          </View>
+
+          <Text style={{ fontSize: 30, fontWeight: "bold" }}>
+            {selectedUser?.username}
+          </Text>
+        </View>
+        <CustomTextInput
+          handleChange={(text) => handleUserDataChange("username", text)}
+          title={selectedUser?.username}
+          icon={"user"}
+        />
+        <CustomTextInput
+          handleChange={(text) => handleUserDataChange("phone", text)}
+          title={selectedUser?.phone}
+          icon={"phone"}
+        />
+        <CustomTextInput
+          handleChange={(text) => handleUserDataChange("password", text)}
+          title={selectedUser?.password}
+          icon={"lock"}
+        />
+        <Button
+          onPress={() => {
+            updateUser(userData, selectedUser?.id);
+            setViewUserModal(false);
+          }}
+          buttonStyle={{ margin: 20 }}
+          ViewComponent={LinearGradient} // Don't forget this!
+          linearGradientProps={{
+            colors: ["#5A9AE6", "#7FDC67"],
+            start: { x: 0, y: 0.5 },
+            end: { x: 1, y: 0.5 },
+          }}
+        >
+          Update User
+        </Button>
+      </CustomModal>
+
+      {/* Delete Modal     */}
+      <CustomModal
+        open={deleteModal}
+        handleClose={() => setDeleteModal(false)}
+        modalAnimation={"fade"}
+      >
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text
+            style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}
+          >
+            Are you sure you want to delete, {selectedUser?.username}?
+          </Text>
+          <View style={{ flexDirection: "row" }}>
             <Button
-              onPress={() => {
-                addUser(userData);
-                setAddUserModal(false);
-                Toast.show({
-                  type: "success",
-                  text1: "Success",
-                  text2: "Successfull Added User",
-                });
-                setUserData({ username: "", password: "", phone: "" });
-              }}
+              onPress={() => setDeleteModal(false)}
               buttonStyle={{ margin: 20 }}
               ViewComponent={LinearGradient} // Don't forget this!
               linearGradientProps={{
@@ -159,151 +246,28 @@ const Admin = ({ navigation }) => {
                 end: { x: 1, y: 0.5 },
               }}
             >
-              {loading ? <ActivityIndicator /> : "Add User"}
+              Cancel
             </Button>
-          </View>
-        </View>
-      </Modal>
-      {/* //View User Modal */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={viewUserModal}
-        onRequestClose={() => {
-          setViewUserModal(!viewUserModal);
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#21212199",
-          }}
-        >
-          <View
-            style={{
-              height: 550,
-              width: "100%",
-              backgroundColor: "white",
-              padding: 20,
-            }}
-          >
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-              <View style={{ position: "relative" }}>
-                <TouchableOpacity
-                  onPress={() => setDeleteModal(true)}
-                  style={{ position: "absolute", right: -5, zIndex: 2 }}
-                >
-                  <FontAwesome5 name="trash" color="red" size={25} />
-                </TouchableOpacity>
-                <Image
-                  source={{ uri: selectedUser?.profilePic }}
-                  style={{ width: 100, height: 100 }}
-                />
-              </View>
-
-              <Text style={{ fontSize: 30, fontWeight: "bold" }}>
-                {selectedUser?.username}
-              </Text>
-            </View>
-            <CustomTextInput
-              handleChange={(text) => handleUserDataChange("username", text)}
-              title={selectedUser?.username}
-              icon={"user"}
-            />
-            <CustomTextInput
-              handleChange={(text) => handleUserDataChange("phone", text)}
-              title={selectedUser?.phone}
-              icon={"phone"}
-            />
-            <CustomTextInput
-              handleChange={(text) => handleUserDataChange("password", text)}
-              title={selectedUser?.password}
-              icon={"lock"}
-            />
             <Button
               onPress={() => {
-                updateUser(userData, selectedUser?.id);
+                deleteUser(selectedUser?.id);
+                setDeleteModal(false);
                 setViewUserModal(false);
               }}
               buttonStyle={{ margin: 20 }}
               ViewComponent={LinearGradient} // Don't forget this!
               linearGradientProps={{
-                colors: ["#5A9AE6", "#7FDC67"],
+                colors: ["red", "orange"],
                 start: { x: 0, y: 0.5 },
                 end: { x: 1, y: 0.5 },
               }}
             >
-              Update User
+              Delete User
             </Button>
           </View>
         </View>
-      </Modal>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={deleteModal}
-        onRequestClose={() => {
-          setDeleteModal(!deleteModal);
-        }}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#21212199",
-          }}
-        >
-          <View
-            style={{
-              height: 200,
-              width: "100%",
-              backgroundColor: "white",
-              padding: 20,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}
-            >
-              Are you sure you want to delete, {selectedUser?.username}?
-            </Text>
-            <View style={{ flexDirection: "row" }}>
-              <Button
-                onPress={() => setDeleteModal(false)}
-                buttonStyle={{ margin: 20 }}
-                ViewComponent={LinearGradient} // Don't forget this!
-                linearGradientProps={{
-                  colors: ["#5A9AE6", "#7FDC67"],
-                  start: { x: 0, y: 0.5 },
-                  end: { x: 1, y: 0.5 },
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                onPress={() => {
-                  deleteUser(selectedUser?.id);
-                  setDeleteModal(false);
-                  setViewUserModal(false);
-                }}
-                buttonStyle={{ margin: 20 }}
-                ViewComponent={LinearGradient} // Don't forget this!
-                linearGradientProps={{
-                  colors: ["red", "orange"],
-                  start: { x: 0, y: 0.5 },
-                  end: { x: 1, y: 0.5 },
-                }}
-              >
-                Delete User
-              </Button>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      </CustomModal>
+
       <SpeedDial
         style={{ zIndex: 9999 }}
         isOpen={open}

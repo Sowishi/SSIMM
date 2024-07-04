@@ -8,6 +8,8 @@ import CustomTextInput from "../components/customTextInput";
 import useGetUsers from "../hooks/useGetUsers";
 import { AuthContext } from "../context/authContext";
 import Toast from "react-native-toast-message";
+import { useFonts } from "expo-font";
+import Loading from "../components/loading";
 
 const Login = ({ navigation }) => {
   const [open, setOpen] = useState(false);
@@ -16,6 +18,13 @@ const Login = ({ navigation }) => {
 
   const { users } = useGetUsers();
   const { setUser } = useContext(AuthContext);
+  const [loaded, error] = useFonts({
+    Kanit: require("../assets/Kanit-Regular.ttf"),
+  });
+
+  if (!loaded) {
+    return <Loading />;
+  }
 
   const handleLogin = () => {
     let userFound = false;
@@ -63,7 +72,14 @@ const Login = ({ navigation }) => {
           width: "90%",
         }}
       >
-        <Text style={{ fontSize: 30, fontWeight: "bold", letterSpacing: 10 }}>
+        <Text
+          style={{
+            fontSize: 30,
+            fontWeight: "bold",
+            letterSpacing: 10,
+            fontFamily: "Kanit",
+          }}
+        >
           Login
         </Text>
         <View
@@ -96,7 +112,9 @@ const Login = ({ navigation }) => {
         <View
           style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}
         >
-          <Text style={{ marginBottom: 5 }}>Electricity @2024</Text>
+          <Text style={{ marginBottom: 5, fontFamily: "Kanit" }}>
+            Electricity @2024
+          </Text>
         </View>
       </View>
       <SpeedDial
