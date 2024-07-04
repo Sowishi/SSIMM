@@ -7,10 +7,34 @@ import LottieView from "lottie-react-native";
 import { useContext, useState } from "react";
 import { SpeedDial } from "react-native-elements";
 import { AuthContext } from "../context/authContext";
+import { useFonts } from "expo-font";
 
 const Client = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const { user } = useContext(AuthContext);
+
+  const [loaded, error] = useFonts({
+    Kanit: require("../assets/Kanit-Regular.ttf"),
+  });
+
+  if (!loaded) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "white",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <LottieView
+          autoPlay
+          style={{ minWidth: 300, minHeight: 300 }}
+          source={require("../assets/loading.json")}
+        ></LottieView>
+      </View>
+    );
+  }
 
   return (
     <View
@@ -43,86 +67,53 @@ const Client = ({ navigation }) => {
           onPress={() => navigation.navigate("login")}
         />
       </SpeedDial>
-
-      <View style={{ flex: 1 }}>
-        <LinearGradient
-          colors={["#AC1457", "rgb(15,23,42)"]}
-          style={{
-            flex: 1,
-            backgroundColor: "rgb(173,20,87)",
-            margin: 25,
-            borderRadius: 10,
-            justifyContent: "flex-start",
-            alignItems: "flex-start",
-          }}
-        >
-          <View style={{ margin: 20 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-              }}
-            >
-              <Image
-                source={{ uri: user?.profilePic }}
-                style={{ width: 30, height: 30 }}
-              />
-              <Text style={{ fontSize: 25, color: "white", marginLeft: 10 }}>
-                {user?.username}
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                alignItems: "center",
-                marginTop: 5,
-              }}
-            >
-              <FontAwesome5
-                style={{ marginRight: 5 }}
-                name="phone"
-                size={18}
-                color="white"
-              />
-              <Text style={{ fontSize: 18, color: "white" }}>
-                +639936170501
-              </Text>
-            </View>
-          </View>
-        </LinearGradient>
-      </View>
       <View
         style={{
-          flex: 1.5,
-          backgroundColor: "white",
-          marginTop: -110,
-          marginHorizontal: 45,
-          borderRadius: 5,
-          justifyContent: "center",
+          flexDirection: "row",
+          justifyContent: "space-between",
           alignItems: "center",
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-
-          elevation: 5,
+          margin: 20,
         }}
       >
-        <Text style={{ fontSize: 20, marginBottom: 15 }}>
-          Remaining Balance
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Image
+            style={{ width: 45, height: 45 }}
+            source={{ uri: user?.profilePic }}
+          />
+          <Text
+            style={{ fontFamily: "Kanit", marginLeft: 5, fontWeight: "bold" }}
+          >
+            Good Morning, {user?.username}
+          </Text>
+        </View>
+        <View>
+          <FontAwesome5 name="bars" size={25} />
+        </View>
+      </View>
+
+      <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <Text
+          style={{
+            fontFamily: "Kanit",
+            fontSize: 25,
+            marginBottom: 10,
+            color: "#00AED1",
+          }}
+        >
+          Available Balance
         </Text>
         <AnimatedCircularProgress
           size={200}
           width={15}
           fill={70}
-          tintColor="#AC1457"
-          backgroundColor="#AC145799"
+          tintColor="#F7A200"
+          backgroundColor="gray"
         >
           {(fill) => (
             <>
@@ -136,6 +127,7 @@ const Client = ({ navigation }) => {
                   fontSize: 15,
                   textAlign: "center",
                   fontWeight: "bold",
+                  fontFamily: "Kanit",
                 }}
               >
                 70 out of 100
@@ -144,124 +136,134 @@ const Client = ({ navigation }) => {
           )}
         </AnimatedCircularProgress>
       </View>
-      <ScrollView
-        style={{
-          flex: 1,
-          marginHorizontal: 20,
-          marginTop: 15,
-        }}
-      >
-        <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>
-          Recent Transaction
-        </Text>
-        <View>
+      <View style={{ margin: 20 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{ fontFamily: "Kanit", fontSize: 30, fontWeight: "bold" }}
+          >
+            Transactions
+          </Text>
+          <Text style={{ fontFamily: "Kanit", fontSize: 15, color: "gray" }}>
+            view all
+          </Text>
+        </View>
+        <View style={{ marginTop: 10 }}>
           <View
             style={{
-              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexDirection: "row",
+              padding: 15,
               backgroundColor: "white",
-              padding: 10,
-              borderRadius: 5,
-              marginVertical: 5,
               shadowColor: "#000",
               shadowOffset: {
                 width: 0,
-                height: 1,
+                height: 2,
               },
-              shadowOpacity: 0.2,
-              shadowRadius: 1.41,
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
 
-              elevation: 2,
+              elevation: 5,
+              borderRadius: 20,
+              marginVertical: 10,
             }}
           >
-            <Text>100 Pesos Added to your account</Text>
-            <Text>June 25, 2024</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <FontAwesome5 name="lightbulb" size={30} color={"green"} />
+              <View style={{ marginLeft: 10 }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: "Kanit",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Received
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: "Kanit",
+                    color: "gray",
+                  }}
+                >
+                  July 4, 2024
+                </Text>
+              </View>
+            </View>
+            <View>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontFamily: "Kanit",
+                }}
+              >
+                +20 watts
+              </Text>
+            </View>
           </View>
           <View
             style={{
-              width: "100%",
+              justifyContent: "space-between",
+              alignItems: "center",
+              flexDirection: "row",
+              padding: 15,
               backgroundColor: "white",
-              padding: 10,
-              borderRadius: 5,
-              marginVertical: 5,
               shadowColor: "#000",
               shadowOffset: {
                 width: 0,
-                height: 1,
+                height: 2,
               },
-              shadowOpacity: 0.2,
-              shadowRadius: 1.41,
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
 
-              elevation: 2,
+              elevation: 5,
+              borderRadius: 20,
+              marginVertical: 10,
             }}
           >
-            <Text>100 Pesos Added to your account</Text>
-            <Text>June 25, 2024</Text>
-          </View>
-          <View
-            style={{
-              width: "100%",
-              backgroundColor: "white",
-              padding: 10,
-              borderRadius: 5,
-              marginVertical: 5,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 1,
-              },
-              shadowOpacity: 0.2,
-              shadowRadius: 1.41,
-
-              elevation: 2,
-            }}
-          >
-            <Text>100 Pesos Added to your account</Text>
-            <Text>June 25, 2024</Text>
-          </View>
-          <View
-            style={{
-              width: "100%",
-              backgroundColor: "white",
-              padding: 10,
-              borderRadius: 5,
-              marginVertical: 5,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 1,
-              },
-              shadowOpacity: 0.2,
-              shadowRadius: 1.41,
-
-              elevation: 2,
-            }}
-          >
-            <Text>100 Pesos Added to your account</Text>
-            <Text>June 25, 2024</Text>
-          </View>
-          <View
-            style={{
-              width: "100%",
-              backgroundColor: "white",
-              padding: 10,
-              borderRadius: 5,
-              marginVertical: 5,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 1,
-              },
-              shadowOpacity: 0.2,
-              shadowRadius: 1.41,
-
-              elevation: 2,
-            }}
-          >
-            <Text>100 Pesos Added to your account</Text>
-            <Text>June 25, 2024</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <FontAwesome5 name="lightbulb" size={30} color={"green"} />
+              <View style={{ marginLeft: 10 }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontFamily: "Kanit",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Received
+                </Text>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontFamily: "Kanit",
+                    color: "gray",
+                  }}
+                >
+                  July 4, 2024
+                </Text>
+              </View>
+            </View>
+            <View>
+              <Text
+                style={{
+                  fontSize: 20,
+                  fontFamily: "Kanit",
+                }}
+              >
+                +20 watts
+              </Text>
+            </View>
           </View>
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 };

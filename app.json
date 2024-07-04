@@ -5,6 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -28,6 +29,14 @@
       "eas": {
         "projectId": "d6e2449a-f99c-43f2-b77c-510ae7dbe6cb"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-font",
+        {
+          "fonts": ["assets/AntonSC-Regular.ttf", "assets/Kanit-Regular.ttf"]
+        }
+      ]
+    ]
   }
 }
