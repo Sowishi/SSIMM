@@ -1,12 +1,18 @@
 import { Image, Text } from "react-native";
 import { ListItem } from "react-native-elements";
 
-const UserCard = ({ item, setViewUserModal, setSelectedUser }) => {
+const UserCard = ({
+  item,
+  setViewUserModal,
+  setSelectedUser,
+  handleUpdateUserData,
+}) => {
   return (
     <ListItem
       onPress={() => {
         setViewUserModal(true);
         setSelectedUser(item);
+        handleUpdateUserData(item);
       }}
       style={{
         backgroundColor: "white",

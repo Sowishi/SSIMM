@@ -3,6 +3,7 @@ import {
   FlatList,
   Image,
   Modal,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -32,6 +33,8 @@ const Admin = ({ navigation }) => {
   const [loaded] = useFonts({
     Kanit: require("../assets/Kanit-Regular.ttf"),
   });
+
+  //Loading State
 
   if (!loaded) {
     return (
@@ -65,6 +68,14 @@ const Admin = ({ navigation }) => {
     password: "",
   });
 
+  const handleUpdateUserData = (item) => {
+    setUserData({
+      username: item.username,
+      phone: item.phone,
+      password: item.password,
+    });
+  };
+
   const handleUserDataChange = (name, text) => {
     const newUserData = { ...userData, [name]: text };
     setUserData(newUserData);
@@ -79,6 +90,8 @@ const Admin = ({ navigation }) => {
       });
     }
   }, [error]);
+
+  console.log(userData);
 
   return (
     <View
@@ -106,7 +119,7 @@ const Admin = ({ navigation }) => {
         </Text>
         <FontAwesome5 name="user" size={20} />
       </View>
-      <View style={{ margin: 10 }}>
+      <ScrollView style={{ margin: 10 }}>
         <FlatList
           data={users}
           renderItem={({ item }) => (
@@ -114,10 +127,11 @@ const Admin = ({ navigation }) => {
               item={item}
               setViewUserModal={setViewUserModal}
               setSelectedUser={setSelectedUser}
+              handleUpdateUserData={handleUpdateUserData}
             />
           )}
         />
-      </View>
+      </ScrollView>
       {/* //Add User Modal */}
       <CustomModal
         open={addUserModal}
@@ -194,17 +208,20 @@ const Admin = ({ navigation }) => {
         <CustomTextInput
           handleChange={(text) => handleUserDataChange("username", text)}
           title={selectedUser?.username}
+          value={userData.username}
           icon={"user"}
         />
         <CustomTextInput
           handleChange={(text) => handleUserDataChange("phone", text)}
           title={selectedUser?.phone}
           icon={"phone"}
+          value={userData.phone}
         />
         <CustomTextInput
           handleChange={(text) => handleUserDataChange("password", text)}
           title={selectedUser?.password}
           icon={"lock"}
+          value={userData.password}
         />
         <Button
           onPress={() => {
