@@ -13,7 +13,8 @@ const useAddUser = () => {
     if (
       data.username.length <= 0 ||
       data.password.length <= 0 ||
-      data.phone.length <= 0
+      data.phone.length <= 0 ||
+      data.balance.length <= 0
     ) {
       setError("Fill out all the field");
       setLoading(false);

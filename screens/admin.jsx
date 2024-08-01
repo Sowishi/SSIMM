@@ -66,6 +66,7 @@ const Admin = ({ navigation }) => {
     username: "",
     phone: "",
     password: "",
+    balance: "",
   });
 
   const handleUpdateUserData = (item) => {
@@ -73,6 +74,7 @@ const Admin = ({ navigation }) => {
       username: item.username,
       phone: item.phone,
       password: item.password,
+      balance: item.balance,
     });
   };
 
@@ -90,8 +92,6 @@ const Admin = ({ navigation }) => {
       });
     }
   }, [error]);
-
-  console.log(userData);
 
   return (
     <View
@@ -157,6 +157,11 @@ const Admin = ({ navigation }) => {
           title={"Password"}
           handleChange={(text) => handleUserDataChange("password", text)}
         />
+        <CustomTextInput
+          icon={"bolt"}
+          title={"Balance"}
+          handleChange={(text) => handleUserDataChange("balance", text)}
+        />
 
         <Button
           onPress={() => {
@@ -169,7 +174,7 @@ const Admin = ({ navigation }) => {
             });
             setUserData({ username: "", password: "", phone: "" });
           }}
-          buttonStyle={{ margin: 20 }}
+          buttonStyle={{ margin: 20, borderRadius: 10, paddingVertical: 13 }}
           ViewComponent={LinearGradient} // Don't forget this!
           linearGradientProps={{
             colors: ["#5A9AE6", "#7FDC67"],
@@ -178,6 +183,12 @@ const Admin = ({ navigation }) => {
           }}
         >
           {loading ? <ActivityIndicator /> : "Add User"}
+          <FontAwesome5
+            style={{ marginLeft: 5 }}
+            name={"user-plus"}
+            size={15}
+            color="white"
+          />
         </Button>
       </CustomModal>
 
@@ -223,12 +234,19 @@ const Admin = ({ navigation }) => {
           icon={"lock"}
           value={userData.password}
         />
+        <CustomTextInput
+          handleChange={(text) => handleUserDataChange("balance", text)}
+          title={selectedUser?.balance}
+          icon={"bolt"}
+          value={userData.balance}
+        />
+
         <Button
           onPress={() => {
             updateUser(userData, selectedUser?.id);
             setViewUserModal(false);
           }}
-          buttonStyle={{ margin: 20 }}
+          buttonStyle={{ margin: 20, borderRadius: 10, paddingVertical: 13 }}
           ViewComponent={LinearGradient} // Don't forget this!
           linearGradientProps={{
             colors: ["#5A9AE6", "#7FDC67"],
@@ -236,7 +254,13 @@ const Admin = ({ navigation }) => {
             end: { x: 1, y: 0.5 },
           }}
         >
-          Update User
+          Update User{" "}
+          <FontAwesome5
+            style={{ marginLeft: 5 }}
+            name={"edit"}
+            size={15}
+            color="white"
+          />
         </Button>
       </CustomModal>
 
@@ -246,7 +270,13 @@ const Admin = ({ navigation }) => {
         handleClose={() => setDeleteModal(false)}
         modalAnimation={"fade"}
       >
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 20,
+          }}
+        >
           <Text
             style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}
           >
@@ -255,7 +285,12 @@ const Admin = ({ navigation }) => {
           <View style={{ flexDirection: "row" }}>
             <Button
               onPress={() => setDeleteModal(false)}
-              buttonStyle={{ margin: 20 }}
+              buttonStyle={{
+                margin: 20,
+                paddingVertical: 13,
+                width: 130,
+                borderRadius: 10,
+              }}
               ViewComponent={LinearGradient} // Don't forget this!
               linearGradientProps={{
                 colors: ["#5A9AE6", "#7FDC67"],
@@ -271,7 +306,12 @@ const Admin = ({ navigation }) => {
                 setDeleteModal(false);
                 setViewUserModal(false);
               }}
-              buttonStyle={{ margin: 20 }}
+              buttonStyle={{
+                margin: 20,
+                paddingVertical: 13,
+                width: 130,
+                borderRadius: 10,
+              }}
               ViewComponent={LinearGradient} // Don't forget this!
               linearGradientProps={{
                 colors: ["red", "orange"],
@@ -279,7 +319,7 @@ const Admin = ({ navigation }) => {
                 end: { x: 1, y: 0.5 },
               }}
             >
-              Delete User
+              Delete
             </Button>
           </View>
         </View>
