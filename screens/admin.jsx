@@ -24,6 +24,7 @@ import { useFonts } from "expo-font";
 import UserCard from "../components/userCard";
 import CustomModal from "../components/customModal";
 import AnimatedNumbers from "react-native-animated-numbers";
+import { BarCodeScanner } from "expo-barcode-scanner";
 
 const Admin = ({ navigation }) => {
   //Hooks
@@ -61,6 +62,7 @@ const Admin = ({ navigation }) => {
   const [addUserModal, setAddUserModal] = useState(false);
   const [viewUserModal, setViewUserModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [scannerModal, setScannerModal] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userData, setUserData] = useState({
@@ -69,6 +71,8 @@ const Admin = ({ navigation }) => {
     password: "",
     balance: "",
   });
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
 
   const handleUpdateUserData = (item) => {
     setUserData({
@@ -84,6 +88,18 @@ const Admin = ({ navigation }) => {
     setUserData(newUserData);
   };
 
+  const handleBarCodeScanned = ({ type, data }) => {
+    users.map((user) => {
+      if (user.id == data) {
+        setSelectedUser(user);
+      }
+    });
+
+    setViewUserModal(true);
+    setScanned(false);
+    setScannerModal(false);
+  };
+
   useEffect(() => {
     if (error) {
       Toast.show({
@@ -92,7 +108,21 @@ const Admin = ({ navigation }) => {
         text2: error,
       });
     }
+
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === "granted");
+    };
+
+    getBarCodeScannerPermissions();
   }, [error]);
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
   return (
     <View
@@ -120,6 +150,7 @@ const Admin = ({ navigation }) => {
         </Text>
         <FontAwesome5 name="user" size={20} />
       </View>
+
       <ScrollView style={{ margin: 10 }}>
         <FlatList
           data={users}
@@ -219,7 +250,7 @@ const Admin = ({ navigation }) => {
             />
           </View>
 
-          <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 5 }}>
+          <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
             {selectedUser?.username}
           </Text>
           <Text style={{ fontSize: 15, color: "gray", marginTop: 5 }}>
@@ -229,7 +260,7 @@ const Admin = ({ navigation }) => {
             includeComma
             animateToNumber={selectedUser ? selectedUser.balance : 0}
             fontStyle={{
-              fontSize: 40,
+              fontSize: 30,
               fontWeight: "bold",
               fontFamily: "Kanit",
             }}
@@ -349,6 +380,19 @@ const Admin = ({ navigation }) => {
         </View>
       </CustomModal>
 
+      {/* Scanner Modal */}
+      <CustomModal
+        modalAnimation={"fade"}
+        height={500}
+        open={scannerModal}
+        handleClose={() => setScannerModal(false)}
+      >
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}
+        />
+      </CustomModal>
+
       <SpeedDial
         style={{ zIndex: 9999 }}
         isOpen={open}
@@ -361,6 +405,11 @@ const Admin = ({ navigation }) => {
           icon={{ name: "person", color: "#fff" }}
           title="Add User"
           onPress={() => setAddUserModal(true)}
+        />
+        <SpeedDial.Action
+          icon={{ name: "qr-code", color: "#fff" }}
+          title="Scan QR Code"
+          onPress={() => setScannerModal(true)}
         />
         <SpeedDial.Action
           icon={{ name: "logout", color: "#fff" }}

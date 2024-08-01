@@ -36,6 +36,12 @@
         {
           "fonts": ["assets/AntonSC-Regular.ttf", "assets/Kanit-Regular.ttf"]
         }
+      ],
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access camera."
+        }
       ]
     ]
   }
