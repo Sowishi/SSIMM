@@ -1,19 +1,32 @@
-import { Image, Linking, ScrollView, Text, View } from "react-native";
+import {
+  Image,
+  Linking,
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { AnimatedCircularProgress } from "react-native-circular-progress";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import LottieView from "lottie-react-native";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SpeedDial } from "react-native-elements";
 import { AuthContext } from "../context/authContext";
 import { useFonts } from "expo-font";
 import TransactionCard from "../components/transactionCard";
-import CircleDisplay from "../components/circleDisplay";
+import AnimatedNumbers from "react-native-animated-numbers";
+import useGetUsers from "../hooks/useGetUsers";
+import Loading from "../components/loading";
+import useGetTransaction from "../hooks/useGetTransaction";
 
 const Client = ({ navigation }) => {
   const [open, setOpen] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const { user } = useContext(AuthContext);
+  const { getUsers } = useGetUsers();
+  const { getTransaction, transaction } = useGetTransaction();
 
   const [loaded, error] = useFonts({
     Kanit: require("../assets/Kanit-Regular.ttf"),
@@ -38,43 +51,33 @@ const Client = ({ navigation }) => {
     );
   }
 
+  const onRefresh = () => {
+    setTimeout(() => {
+      getUsers();
+    }, 2000);
+  };
+
+  useEffect(() => {
+    getTransaction(user.id);
+  }, []);
+
   return (
-    <View
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
       style={{
         flex: 1,
         backgroundColor: "#FBFFF5",
         marginTop: Constants.statusBarHeight,
       }}
     >
-      <SpeedDial
-        style={{ zIndex: 9999 }}
-        isOpen={open}
-        icon={{ name: "person", color: "#fff" }}
-        openIcon={{ name: "close", color: "#fff" }}
-        onOpen={() => setOpen(!open)}
-        onClose={() => setOpen(!open)}
-      >
-        <SpeedDial.Action
-          icon={{ name: "qr-code", color: "#fff" }}
-          title="Show QR"
-          onPress={() =>
-            Linking.openURL(
-              "https://www.facebook.com/profile.php?id=100073436105134"
-            )
-          }
-        />
-        <SpeedDial.Action
-          icon={{ name: "logout", color: "#fff" }}
-          title="Log out"
-          onPress={() => navigation.navigate("login")}
-        />
-      </SpeedDial>
       <View
         style={{
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
-          margin: 20,
+          margin: 25,
         }}
       >
         <View
@@ -100,23 +103,26 @@ const Client = ({ navigation }) => {
             Good Morning, {user?.username}
           </Text>
         </View>
-        <View>
-          <FontAwesome5 name="bars" size={25} />
-        </View>
+        <FontAwesome5 name="grip-horizontal" size={25} />
       </View>
+
+      {/* Header       */}
 
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Text
           style={{
             fontFamily: "Kanit",
             fontSize: 20,
-            marginBottom: 10,
             color: "#00AED1",
           }}
         >
           Available Balance
         </Text>
-        <CircleDisplay />
+        <AnimatedNumbers
+          includeComma
+          animateToNumber={user.balance}
+          fontStyle={{ fontSize: 70, fontWeight: "bold", fontFamily: "Kanit" }}
+        />
       </View>
       <View style={{ margin: 20 }}>
         <View
@@ -135,9 +141,12 @@ const Client = ({ navigation }) => {
             view all
           </Text>
         </View>
-        <TransactionCard />
+
+        {transaction?.map((item) => {
+          return <TransactionCard item={item} />;
+        })}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

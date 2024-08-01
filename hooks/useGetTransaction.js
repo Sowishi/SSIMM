@@ -2,28 +2,24 @@ import { onValue, ref } from "firebase/database";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
 
-const useGetUsers = () => {
-  const [users, setUsers] = useState();
+const useGetTransaction = () => {
+  const [transaction, setTransaction] = useState();
   const [loading, setLoading] = useState(false);
 
-  const getUsers = () => {
+  const getTransaction = (id) => {
     setLoading(true);
-    const usersRef = ref(db, "users");
+    const usersRef = ref(db, `users/${id}/transaction`);
     onValue(usersRef, (snapshot) => {
       const output = [];
       snapshot.forEach((doc) => {
         output.push({ ...doc.val(), id: doc.key });
       });
-      setUsers(output);
+      setTransaction(output);
     });
     setLoading(false);
   };
 
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  return { users, loading, getUsers };
+  return { transaction, loading, getTransaction };
 };
 
-export default useGetUsers;
+export default useGetTransaction;

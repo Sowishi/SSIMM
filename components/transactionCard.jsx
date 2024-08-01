@@ -1,7 +1,9 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Text, View } from "react-native";
 
-const TransactionCard = () => {
+const TransactionCard = ({ item }) => {
+  const date = new Date(item.createdAt);
+  const formattedDateTime = date.toLocaleString();
   return (
     <View style={{ marginTop: 10 }}>
       <View
@@ -43,7 +45,7 @@ const TransactionCard = () => {
                 color: "gray",
               }}
             >
-              July 4, 2024
+              {formattedDateTime}
             </Text>
           </View>
         </View>
@@ -54,7 +56,7 @@ const TransactionCard = () => {
               fontFamily: "Kanit",
             }}
           >
-            +20 watts
+            +{item.balance}
           </Text>
         </View>
       </View>

@@ -1,10 +1,11 @@
 import LottieView from "lottie-react-native";
 import { View } from "react-native";
 
-const Loading = () => {
+const Loading = ({ style }) => {
   return (
     <View
       style={{
+        ...style,
         flex: 1,
         backgroundColor: "white",
         justifyContent: "center",

@@ -23,6 +23,7 @@ import useDeleteUser from "../hooks/useDeleteUser";
 import { useFonts } from "expo-font";
 import UserCard from "../components/userCard";
 import CustomModal from "../components/customModal";
+import AnimatedNumbers from "react-native-animated-numbers";
 
 const Admin = ({ navigation }) => {
   //Hooks
@@ -157,11 +158,17 @@ const Admin = ({ navigation }) => {
           title={"Password"}
           handleChange={(text) => handleUserDataChange("password", text)}
         />
-        <CustomTextInput
-          icon={"bolt"}
-          title={"Balance"}
-          handleChange={(text) => handleUserDataChange("balance", text)}
-        />
+        <View>
+          <Text style={{ fontFamily: "Kanit", fontSize: 20, marginLeft: 20 }}>
+            Initial Balance
+          </Text>
+          <CustomTextInput
+            handleChange={(text) => handleUserDataChange("balance", text)}
+            title={"Please input the initial balance"}
+            icon={"bolt"}
+            type="numeric"
+          />
+        </View>
 
         <Button
           onPress={() => {
@@ -212,9 +219,21 @@ const Admin = ({ navigation }) => {
             />
           </View>
 
-          <Text style={{ fontSize: 30, fontWeight: "bold" }}>
+          <Text style={{ fontSize: 30, fontWeight: "bold", marginTop: 5 }}>
             {selectedUser?.username}
           </Text>
+          <Text style={{ fontSize: 15, color: "gray", marginTop: 5 }}>
+            Current Balance:
+          </Text>
+          <AnimatedNumbers
+            includeComma
+            animateToNumber={selectedUser ? selectedUser.balance : 0}
+            fontStyle={{
+              fontSize: 40,
+              fontWeight: "bold",
+              fontFamily: "Kanit",
+            }}
+          />
         </View>
         <CustomTextInput
           handleChange={(text) => handleUserDataChange("username", text)}
@@ -234,16 +253,21 @@ const Admin = ({ navigation }) => {
           icon={"lock"}
           value={userData.password}
         />
-        <CustomTextInput
-          handleChange={(text) => handleUserDataChange("balance", text)}
-          title={selectedUser?.balance}
-          icon={"bolt"}
-          value={userData.balance}
-        />
+        <View>
+          <Text style={{ fontFamily: "Kanit", fontSize: 20, marginLeft: 20 }}>
+            Add Balance
+          </Text>
+          <CustomTextInput
+            handleChange={(text) => handleUserDataChange("balance", text)}
+            title={"Input the balance that you will add"}
+            icon={"bolt"}
+            type="numeric"
+          />
+        </View>
 
         <Button
           onPress={() => {
-            updateUser(userData, selectedUser?.id);
+            updateUser(userData, selectedUser);
             setViewUserModal(false);
           }}
           buttonStyle={{ margin: 20, borderRadius: 10, paddingVertical: 13 }}
