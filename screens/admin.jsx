@@ -71,6 +71,8 @@ const Admin = ({ navigation }) => {
     password: "",
     balance: "",
   });
+
+  const [addBalance, setAddBalance] = useState(0);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
 
@@ -289,7 +291,7 @@ const Admin = ({ navigation }) => {
             Add Balance
           </Text>
           <CustomTextInput
-            handleChange={(text) => handleUserDataChange("balance", text)}
+            handleChange={(text) => setAddBalance(text)}
             title={"Input the balance that you will add"}
             icon={"bolt"}
             type="numeric"
@@ -298,8 +300,9 @@ const Admin = ({ navigation }) => {
 
         <Button
           onPress={() => {
-            updateUser(userData, selectedUser);
+            updateUser(userData, selectedUser, addBalance);
             setViewUserModal(false);
+            setAddBalance(0);
           }}
           buttonStyle={{ margin: 20, borderRadius: 10, paddingVertical: 13 }}
           ViewComponent={LinearGradient} // Don't forget this!

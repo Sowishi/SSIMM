@@ -26,6 +26,7 @@ import CustomModal from "../components/customModal";
 
 const Client = ({ navigation }) => {
   const [open, setOpen] = useState(false);
+  const [viewAllModal, setViewAllModal] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { user } = useContext(AuthContext);
   const { getUsers } = useGetUsers();
@@ -75,6 +76,7 @@ const Client = ({ navigation }) => {
         marginTop: Constants.statusBarHeight,
       }}
     >
+      {/* //QR Code Modal */}
       <CustomModal
         modalAnimation="fade"
         height={500}
@@ -84,20 +86,25 @@ const Client = ({ navigation }) => {
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          {/* <Text
-            style={{
-              fontSize: 30,
-              fontFamily: "Kanit",
-              fontWeight: "bold",
-              marginBottom: 30,
-            }}
-          >
-            Account QR Code
-          </Text> */}
           <QRCode size={300} value={user.id} />
         </View>
       </CustomModal>
 
+      <CustomModal
+        modalAnimation="fade"
+        height={600}
+        open={viewAllModal}
+        handleClose={() => setViewAllModal(false)}
+      >
+        <ScrollView style={{ padding: 20 }}>
+          <Text style={{ fontSize: 25, fontWeight: "bold" }}>
+            All Transactions
+          </Text>
+          {transaction?.map((item) => {
+            return <TransactionCard item={item} />;
+          })}
+        </ScrollView>
+      </CustomModal>
       <View
         style={{
           flexDirection: "row",
@@ -130,9 +137,7 @@ const Client = ({ navigation }) => {
           </Text>
         </View>
       </View>
-
       {/* Header       */}
-
       <View style={{ justifyContent: "center", alignItems: "center" }}>
         <Text
           style={{
@@ -199,13 +204,16 @@ const Client = ({ navigation }) => {
           >
             Transactions
           </Text>
-          <Text style={{ fontFamily: "Kanit", fontSize: 15, color: "gray" }}>
+          <Text
+            onPress={() => setViewAllModal(true)}
+            style={{ fontFamily: "Kanit", fontSize: 15, color: "gray" }}
+          >
             view all
           </Text>
         </View>
 
-        {transaction?.map((item) => {
-          return <TransactionCard item={item} />;
+        {transaction?.slice(0, 3).map((item) => {
+          return <TransactionCard key={item.id} item={item} />;
         })}
       </View>
     </ScrollView>
