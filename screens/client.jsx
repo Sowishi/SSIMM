@@ -86,7 +86,26 @@ const Client = ({ navigation }) => {
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
+          <Text style={{ fontSize: 20, marginBottom: 20, fontWeight: "bold" }}>
+            Kindly scan this to the admin
+          </Text>
           <QRCode size={300} value={user.id} />
+          <Button
+            onPress={() => setOpen(false)}
+            style={{ width: 300, marginHorizontal: 10, marginTop: 20 }}
+            buttonStyle={{
+              paddingVertical: 15,
+              borderRadius: 10,
+            }}
+            ViewComponent={LinearGradient} // Don't forget this!
+            linearGradientProps={{
+              colors: ["#5A9AE6", "red"],
+              start: { x: 0, y: 0.5 },
+              end: { x: 1, y: 0.5 },
+            }}
+          >
+            <Text style={{ color: "white" }}>Close Modal</Text>
+          </Button>
         </View>
       </CustomModal>
 
