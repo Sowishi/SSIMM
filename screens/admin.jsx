@@ -390,10 +390,30 @@ const Admin = ({ navigation }) => {
         open={scannerModal}
         handleClose={() => setScannerModal(false)}
       >
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-          style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}
-        />
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <BarCodeScanner
+            style={{ height: 400, width: 500 }}
+            onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          />
+          <Button
+            onClick={() => setScannerModal(false)}
+            style={{ width: 300, marginHorizontal: 10, marginTop: 20 }}
+            buttonStyle={{
+              paddingVertical: 15,
+              borderRadius: 10,
+            }}
+            ViewComponent={LinearGradient} // Don't forget this!
+            linearGradientProps={{
+              colors: ["#5A9AE6", "red"],
+              start: { x: 0, y: 0.5 },
+              end: { x: 1, y: 0.5 },
+            }}
+          >
+            <Text style={{ color: "white" }}>Close Modal</Text>
+          </Button>
+        </View>
       </CustomModal>
 
       <SpeedDial
