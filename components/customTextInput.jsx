@@ -8,6 +8,7 @@ const CustomTextInput = ({
   value,
   secured,
   type,
+  maxLength,
 }) => {
   return (
     <View
@@ -44,6 +45,7 @@ const CustomTextInput = ({
         <FontAwesome5 name={icon} size={15} color="#4157BC" />
       </View>
       <TextInput
+        maxLength={maxLength}
         value={value}
         secureTextEntry={secured}
         onChangeText={handleChange}

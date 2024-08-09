@@ -182,6 +182,8 @@ const Admin = ({ navigation }) => {
           handleChange={(text) => handleUserDataChange("username", text)}
         />
         <CustomTextInput
+          maxLength={11}
+          type={"numeric"}
           title={"Phone"}
           icon={"phone"}
           handleChange={(text) => handleUserDataChange("phone", text)}
@@ -275,6 +277,8 @@ const Admin = ({ navigation }) => {
           icon={"user"}
         />
         <CustomTextInput
+          maxLength={11}
+          type={"numeric"}
           handleChange={(text) => handleUserDataChange("phone", text)}
           title={selectedUser?.phone}
           icon={"phone"}
