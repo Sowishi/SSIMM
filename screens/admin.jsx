@@ -75,6 +75,7 @@ const Admin = ({ navigation }) => {
   const [addBalance, setAddBalance] = useState(0);
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
+  const [addType, setAddType] = useState("add");
 
   const handleUpdateUserData = (item) => {
     setUserData({
@@ -125,6 +126,8 @@ const Admin = ({ navigation }) => {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
+
+  console.log(addType);
 
   return (
     <View
@@ -240,90 +243,122 @@ const Admin = ({ navigation }) => {
         modalAnimation={"fade"}
         handleClose={() => setViewUserModal(false)}
       >
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <View style={{ position: "relative" }}>
-            <TouchableOpacity
-              onPress={() => setDeleteModal(true)}
-              style={{ position: "absolute", right: -5, zIndex: 2 }}
+        <ScrollView>
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <View style={{ position: "relative" }}>
+              <TouchableOpacity
+                onPress={() => setDeleteModal(true)}
+                style={{ position: "absolute", right: -5, zIndex: 2 }}
+              >
+                <FontAwesome5 name="trash" color="red" size={25} />
+              </TouchableOpacity>
+              <Image
+                source={{ uri: selectedUser?.profilePic }}
+                style={{ width: 100, height: 100 }}
+              />
+            </View>
+
+            <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
+              {selectedUser?.username}
+            </Text>
+            <Text style={{ fontSize: 15, color: "gray", marginTop: 5 }}>
+              Current Balance:
+            </Text>
+            <AnimatedNumbers
+              includeComma
+              animateToNumber={selectedUser ? selectedUser.balance : 0}
+              fontStyle={{
+                fontSize: 30,
+                fontWeight: "bold",
+                fontFamily: "Kanit",
+              }}
+            />
+          </View>
+          <CustomTextInput
+            handleChange={(text) => handleUserDataChange("username", text)}
+            title={selectedUser?.username}
+            value={userData.username}
+            icon={"user"}
+          />
+          <CustomTextInput
+            maxLength={11}
+            type={"numeric"}
+            handleChange={(text) => handleUserDataChange("phone", text)}
+            title={selectedUser?.phone}
+            icon={"phone"}
+            value={userData.phone}
+          />
+          <CustomTextInput
+            handleChange={(text) => handleUserDataChange("password", text)}
+            title={selectedUser?.password}
+            icon={"lock"}
+            value={userData.password}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              onPress={() => setAddType("add")}
+              buttonStyle={{
+                margin: 20,
+                borderRadius: 10,
+                paddingVertical: 13,
+              }}
+              color={addType == "add" ? "green" : "gray"}
             >
-              <FontAwesome5 name="trash" color="red" size={25} />
-            </TouchableOpacity>
-            <Image
-              source={{ uri: selectedUser?.profilePic }}
-              style={{ width: 100, height: 100 }}
+              Add Balance
+            </Button>
+            <Button
+              onPress={() => setAddType("minus")}
+              buttonStyle={{
+                margin: 20,
+                borderRadius: 10,
+                paddingVertical: 13,
+              }}
+              color={addType == "minus" ? "red" : "gray"}
+            >
+              Remove Balance
+            </Button>
+          </View>
+          <View>
+            <Text style={{ fontFamily: "Kanit", fontSize: 20, marginLeft: 20 }}>
+              Balance
+            </Text>
+            <CustomTextInput
+              handleChange={(text) => setAddBalance(text)}
+              title={"Input the balance"}
+              icon={"bolt"}
+              type="numeric"
             />
           </View>
 
-          <Text style={{ fontSize: 20, fontWeight: "bold", marginTop: 5 }}>
-            {selectedUser?.username}
-          </Text>
-          <Text style={{ fontSize: 15, color: "gray", marginTop: 5 }}>
-            Current Balance:
-          </Text>
-          <AnimatedNumbers
-            includeComma
-            animateToNumber={selectedUser ? selectedUser.balance : 0}
-            fontStyle={{
-              fontSize: 30,
-              fontWeight: "bold",
-              fontFamily: "Kanit",
+          <Button
+            onPress={() => {
+              updateUser(userData, selectedUser, addBalance, addType);
+              setViewUserModal(false);
+              setAddBalance(0);
             }}
-          />
-        </View>
-        <CustomTextInput
-          handleChange={(text) => handleUserDataChange("username", text)}
-          title={selectedUser?.username}
-          value={userData.username}
-          icon={"user"}
-        />
-        <CustomTextInput
-          maxLength={11}
-          type={"numeric"}
-          handleChange={(text) => handleUserDataChange("phone", text)}
-          title={selectedUser?.phone}
-          icon={"phone"}
-          value={userData.phone}
-        />
-        <CustomTextInput
-          handleChange={(text) => handleUserDataChange("password", text)}
-          title={selectedUser?.password}
-          icon={"lock"}
-          value={userData.password}
-        />
-        <View>
-          <Text style={{ fontFamily: "Kanit", fontSize: 20, marginLeft: 20 }}>
-            Add Balance
-          </Text>
-          <CustomTextInput
-            handleChange={(text) => setAddBalance(text)}
-            title={"Input the balance that you will add"}
-            icon={"bolt"}
-            type="numeric"
-          />
-        </View>
-
-        <Button
-          onPress={() => {
-            updateUser(userData, selectedUser, addBalance);
-            setViewUserModal(false);
-            setAddBalance(0);
-          }}
-          buttonStyle={{ margin: 20, borderRadius: 10, paddingVertical: 13 }}
-          ViewComponent={LinearGradient} // Don't forget this!
-          linearGradientProps={{
-            colors: ["#5A9AE6", "#7FDC67"],
-            start: { x: 0, y: 0.5 },
-            end: { x: 1, y: 0.5 },
-          }}
-        >
-          Update User{" "}
-          <FontAwesome5
-            style={{ marginLeft: 5 }}
-            name={"edit"}
-            size={15}
-            color="white"
-          />
-        </Button>
+            buttonStyle={{ margin: 20, borderRadius: 10, paddingVertical: 13 }}
+            ViewComponent={LinearGradient} // Don't forget this!
+            linearGradientProps={{
+              colors: ["#5A9AE6", "#7FDC67"],
+              start: { x: 0, y: 0.5 },
+              end: { x: 1, y: 0.5 },
+            }}
+          >
+            Update User{" "}
+            <FontAwesome5
+              style={{ marginLeft: 5 }}
+              name={"edit"}
+              size={15}
+              color="white"
+            />
+          </Button>
+        </ScrollView>
       </CustomModal>
 
       {/* Delete Modal     */}

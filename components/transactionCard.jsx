@@ -4,6 +4,8 @@ import { Text, View } from "react-native";
 const TransactionCard = ({ item }) => {
   const date = new Date(item.createdAt);
   const formattedDateTime = date.toLocaleString();
+
+  console.log(item);
   return (
     <View style={{ marginTop: 10 }}>
       <View
@@ -27,7 +29,11 @@ const TransactionCard = ({ item }) => {
         }}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <FontAwesome5 name="lightbulb" size={25} color={"green"} />
+          <FontAwesome5
+            name="lightbulb"
+            size={25}
+            color={item.type == "add" ? "green" : "red"}
+          />
           <View style={{ marginLeft: 10 }}>
             <Text
               style={{
@@ -36,7 +42,7 @@ const TransactionCard = ({ item }) => {
                 fontWeight: "bold",
               }}
             >
-              Received
+              {item.type == "add" ? "Added" : "Remove"}
             </Text>
             <Text
               style={{
@@ -56,7 +62,8 @@ const TransactionCard = ({ item }) => {
               fontFamily: "Kanit",
             }}
           >
-            +{item.balance}
+            {item.type == "add" ? "+" : "-"}
+            {item.balance}
           </Text>
         </View>
       </View>
