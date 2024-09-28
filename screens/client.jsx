@@ -21,6 +21,9 @@ import {
 } from "react-native-gifted-charts";
 import { ruleTypes } from "gifted-charts-core";
 import { Dimensions } from "react-native";
+import { onValue, ref } from "firebase/database";
+import { db } from "../firebase";
+import moment from "moment";
 
 const Client = ({ navigation }) => {
   const { user } = useContext(AuthContext);
@@ -30,6 +33,9 @@ const Client = ({ navigation }) => {
   });
 
   const screenWidth = Dimensions.get("window").width;
+
+  const [currentFormat, setCurrentFormat] = useState("hourly");
+  const [data, setData] = useState([]);
 
   if (!loaded) {
     return (
@@ -50,61 +56,26 @@ const Client = ({ navigation }) => {
     );
   }
 
-  const ptData = [
-    { value: 3, date: "1 Apr 2022" },
-    { value: 180, date: "2 Apr 2022" },
-    { value: 190, date: "3 Apr 2022" },
-    { value: 180, date: "4 Apr 2022" },
-    { value: 140, date: "5 Apr 2022" },
-    { value: 145, date: "6 Apr 2022" },
-    { value: 160, date: "7 Apr 2022" },
-    { value: 200, date: "8 Apr 2022" },
+  const getData = () => {
+    const dataRef = ref(db, "data");
+    onValue(dataRef, (snapshot) => {
+      const output = [];
+      snapshot.forEach((doc) => {
+        output.push({ ...doc.val(), id: doc.key });
+      });
+      setData(output);
+    });
+  };
 
-    { value: 220, date: "9 Apr 2022" },
-    {
-      value: 240,
-      date: "10 Apr 2022",
-      label: "10 Apr",
-      labelTextStyle: { color: "lightgray", width: 60 },
-    },
-    { value: 280, date: "11 Apr 2022" },
-    { value: 260, date: "12 Apr 2022" },
-    { value: 340, date: "13 Apr 2022" },
-    { value: 385, date: "14 Apr 2022" },
-    { value: 280, date: "15 Apr 2022" },
-    { value: 390, date: "16 Apr 2022" },
+  useEffect(() => {
+    getData();
+  }, []);
 
-    { value: 370, date: "17 Apr 2022" },
-    { value: 285, date: "18 Apr 2022" },
-    { value: 295, date: "19 Apr 2022" },
-    {
-      value: 300,
-      date: "20 Apr 2022",
-      label: "20 Apr",
-      labelTextStyle: { color: "lightgray", width: 60 },
-    },
-    { value: 280, date: "21 Apr 2022" },
-    { value: 295, date: "22 Apr 2022" },
-    { value: 260, date: "23 Apr 2022" },
-    { value: 255, date: "24 Apr 2022" },
+  const filterData = data.map((data) => {
+    const parsedDate = moment(data.date, "DD MMM YYYY, HH:mm:ss");
+    return { ...data, ["date"]: moment(parsedDate).format("LLL") };
+  });
 
-    { value: 190, date: "25 Apr 2022" },
-    { value: 220, date: "26 Apr 2022" },
-    { value: 205, date: "27 Apr 2022" },
-    { value: 230, date: "28 Apr 2022" },
-    { value: 210, date: "29 Apr 2022" },
-    {
-      value: 200,
-      date: "30 Apr 2022",
-      label: "30 Apr",
-      labelTextStyle: { color: "lightgray", width: 60 },
-    },
-    { value: 240, date: "1 May 2022" },
-    { value: 250, date: "2 May 2022" },
-    { value: 280, date: "3 May 2022" },
-    { value: 250, date: "4 May 2022" },
-    { value: 210, date: "5 May 2022" },
-  ];
   return (
     <View
       style={{
@@ -143,6 +114,19 @@ const Client = ({ navigation }) => {
           >
             Good Morning, {user?.username}
           </Text>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("login");
+            }}
+            style={{
+              backgroundColor: "red",
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 10,
+            }}
+          >
+            <Text style={{ color: "white" }}>Logout</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -155,10 +139,14 @@ const Client = ({ navigation }) => {
             paddingVertical: 20,
           }}
         >
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setCurrentFormat("hourly");
+            }}
+          >
             <View
               style={{
-                backgroundColor: "gray",
+                backgroundColor: currentFormat == "hourly" ? "green" : "gray",
                 paddingVertical: 5,
                 paddingHorizontal: 10,
                 borderRadius: 5,
@@ -167,10 +155,14 @@ const Client = ({ navigation }) => {
               <Text style={{ color: "white" }}>Hourly</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setCurrentFormat("daily");
+            }}
+          >
             <View
               style={{
-                backgroundColor: "gray",
+                backgroundColor: currentFormat == "daily" ? "green" : "gray",
                 paddingVertical: 5,
                 paddingHorizontal: 10,
                 borderRadius: 5,
@@ -179,10 +171,14 @@ const Client = ({ navigation }) => {
               <Text style={{ color: "white" }}>Daily</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setCurrentFormat("monthly");
+            }}
+          >
             <View
               style={{
-                backgroundColor: "gray",
+                backgroundColor: currentFormat == "monthly" ? "green" : "gray",
                 paddingVertical: 5,
                 paddingHorizontal: 10,
                 borderRadius: 5,
@@ -191,10 +187,14 @@ const Client = ({ navigation }) => {
               <Text style={{ color: "white" }}>Monthly</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setCurrentFormat("yearly");
+            }}
+          >
             <View
               style={{
-                backgroundColor: "green",
+                backgroundColor: currentFormat == "yearly" ? "green" : "gray",
                 paddingVertical: 5,
                 paddingHorizontal: 10,
                 borderRadius: 5,
@@ -213,11 +213,12 @@ const Client = ({ navigation }) => {
         >
           <LineChart
             areaChart
-            data={ptData}
+            data={filterData}
             rotateLabel
             width={screenWidth - 40}
             height={280}
             spacing={10}
+            hideDataPoints1
             color="#00ff83"
             thickness={2}
             startFillColor="rgba(20,105,81,0.3)"
@@ -297,10 +298,9 @@ const Client = ({ navigation }) => {
           <BarChart
             showFractionalValues
             showYAxisIndices
-            hideRules
             noOfSections={4}
             maxValue={400}
-            data={ptData}
+            data={filterData}
             barWidth={40}
             sideWidth={15}
             isThreeD
