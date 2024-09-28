@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "electricity",
+    "name": "Jpang",
     "slug": "electricity",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/jlogo.png",
 
     "userInterfaceStyle": "light",
     "splash": {
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/jlogo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.sowishi.electricity"

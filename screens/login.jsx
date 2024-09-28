@@ -111,7 +111,7 @@ const Login = ({ navigation }) => {
           style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}
         >
           <Text style={{ marginBottom: 5, fontFamily: "Kanit" }}>
-            Electricity @2024
+            Jpang National High School @2024
           </Text>
         </View>
       </View>
