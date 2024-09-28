@@ -29,17 +29,15 @@ const Login = ({ navigation }) => {
   const handleLogin = () => {
     let userFound = false;
     users.map((user) => {
+      console.log(user);
       if (
         user.username.trim() == username?.trim() &&
         user.password.trim() == password?.trim()
       ) {
         setUser(user);
+        console.log(user);
         userFound = true;
-        if (user.role == "admin") {
-          navigation.navigate("admin");
-        } else {
-          navigation.navigate("client");
-        }
+        navigation.navigate("client");
       }
     });
     if (!userFound) {

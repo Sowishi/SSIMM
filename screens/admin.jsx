@@ -25,6 +25,7 @@ import UserCard from "../components/userCard";
 import CustomModal from "../components/customModal";
 import AnimatedNumbers from "react-native-animated-numbers";
 import { BarCodeScanner } from "expo-barcode-scanner";
+import LottieView from "lottie-react-native";
 
 const Admin = ({ navigation }) => {
   //Hooks
@@ -35,27 +36,6 @@ const Admin = ({ navigation }) => {
   const [loaded] = useFonts({
     Kanit: require("../assets/Kanit-Regular.ttf"),
   });
-
-  //Loading State
-
-  if (!loaded) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: "white",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <LottieView
-          autoPlay
-          style={{ minWidth: 300, minHeight: 300 }}
-          source={require("../assets/loading.json")}
-        ></LottieView>
-      </View>
-    );
-  }
 
   //State
 

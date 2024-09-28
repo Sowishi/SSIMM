@@ -6,12 +6,13 @@ import { getDatabase } from "firebase/database";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDKmNZSw7cvvpnFp0kYsrPdu12SYf027Oo",
-  authDomain: "electricity-72634.firebaseapp.com",
-  projectId: "electricity-72634",
-  storageBucket: "electricity-72634.appspot.com",
-  messagingSenderId: "27681359275",
-  appId: "1:27681359275:web:c5fd3a9db63cac819a7eee",
+  apiKey: "AIzaSyDqyrC8_Y1YmS1dgr0VYR8fzHW2trwtE4w",
+  authDomain: "jpang-d88e8.firebaseapp.com",
+  databaseURL: "https://jpang-d88e8-default-rtdb.firebaseio.com",
+  projectId: "jpang-d88e8",
+  storageBucket: "jpang-d88e8.appspot.com",
+  messagingSenderId: "957593855289",
+  appId: "1:957593855289:web:577bd3de3af70a9d06f4e8",
 };
 
 // Initialize Firebase
