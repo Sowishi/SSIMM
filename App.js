@@ -11,6 +11,10 @@ import { AuthContextProvider } from "./context/authContext";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import MS1 from "./screens/ms1";
 import { Text } from "react-native";
+import MS2 from "./screens/ms2";
+import MS3 from "./screens/ms3";
+import MS4 from "./screens/ms4";
+import MS5 from "./screens/ms5";
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -72,7 +76,7 @@ function Main() {
           ),
         }}
         name="ms2"
-        component={Client}
+        component={MS2}
       />
       <Tab.Screen
         options={{
@@ -89,7 +93,7 @@ function Main() {
           ),
         }}
         name="ms3"
-        component={Client}
+        component={MS3}
       />
       <Tab.Screen
         options={{
@@ -106,7 +110,7 @@ function Main() {
           ),
         }}
         name="ms4"
-        component={Client}
+        component={MS4}
       />
       <Tab.Screen
         options={{
@@ -118,12 +122,12 @@ function Main() {
                 fontWeight: "bold",
               }}
             >
-              MS5
+              Angle
             </Text>
           ),
         }}
         name="ms5"
-        component={Client}
+        component={MS5}
       />
     </Tab.Navigator>
   );

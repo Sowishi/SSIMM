@@ -51,7 +51,7 @@ const Login = ({ navigation }) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: "rgb(215,216,146)",
+        backgroundColor: "#FAFAFA",
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -100,7 +100,7 @@ const Login = ({ navigation }) => {
           />
 
           <FAB
-            color="#B3680D"
+            color="#0D0E10"
             onPress={handleLogin}
             visible={true}
             title="Login"
