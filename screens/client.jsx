@@ -294,19 +294,6 @@ const Client = ({ navigation }) => {
               },
             }}
           />
-
-          <BarChart
-            showFractionalValues
-            showYAxisIndices
-            noOfSections={4}
-            maxValue={400}
-            data={filterData}
-            barWidth={40}
-            sideWidth={15}
-            isThreeD
-            side="right"
-            sectionColors="blue"
-          />
         </View>
       </View>
     </View>

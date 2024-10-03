@@ -37,7 +37,7 @@ const Login = ({ navigation }) => {
         setUser(user);
         console.log(user);
         userFound = true;
-        navigation.navigate("client");
+        navigation.navigate("home");
       }
     });
     if (!userFound) {
@@ -51,7 +51,7 @@ const Login = ({ navigation }) => {
     <View
       style={{
         flex: 1,
-        backgroundColor: "#FBFFF5",
+        backgroundColor: "rgb(215,216,146)",
         justifyContent: "center",
         alignItems: "center",
       }}
@@ -100,6 +100,7 @@ const Login = ({ navigation }) => {
           />
 
           <FAB
+            color="#B3680D"
             onPress={handleLogin}
             visible={true}
             title="Login"
@@ -115,23 +116,6 @@ const Login = ({ navigation }) => {
           </Text>
         </View>
       </View>
-      <SpeedDial
-        isOpen={open}
-        icon={{ name: "question-mark", color: "#fff" }}
-        openIcon={{ name: "close", color: "#fff" }}
-        onOpen={() => setOpen(!open)}
-        onClose={() => setOpen(!open)}
-      >
-        <SpeedDial.Action
-          icon={{ name: "phone", color: "#fff" }}
-          title="Contact Us"
-          onPress={() =>
-            Linking.openURL(
-              "https://www.facebook.com/profile.php?id=100073436105134"
-            )
-          }
-        />
-      </SpeedDial>
     </View>
   );
 };

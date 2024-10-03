@@ -8,7 +8,126 @@ import Admin from "./screens/admin";
 import Toast from "react-native-toast-message";
 import { AuthContextProvider } from "./context/authContext";
 
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import MS1 from "./screens/ms1";
+import { Text } from "react-native";
+
 const Stack = createStackNavigator();
+const Tab = createMaterialTopTabNavigator();
+
+function Main() {
+  return (
+    <Tab.Navigator
+      tabBarPosition="bottom" // Set the tab bar to appear at the bottom
+      screenOptions={{
+        swipeEnabled: false,
+
+        tabBarStyle: {
+          backgroundColor: "#0D0E10",
+          borderRadius: 10,
+          marginBottom: 20,
+          marginHorizontal: 20,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 3,
+          },
+          shadowOpacity: 0.27,
+          shadowRadius: 4.65,
+          elevation: 6,
+          paddingVertical: 10,
+        }, // Customize tab bar style
+        tabBarIndicatorStyle: { backgroundColor: "blue", height: 0 }, // Customize indicator
+      }}
+    >
+      <Tab.Screen
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                color: focused ? "#00A854" : "white",
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              MS1
+            </Text>
+          ),
+        }}
+        name="ms1"
+        component={MS1}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                color: focused ? "#00A854" : "white",
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              MS2
+            </Text>
+          ),
+        }}
+        name="ms2"
+        component={Client}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                color: focused ? "#00A854" : "white",
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              MS3
+            </Text>
+          ),
+        }}
+        name="ms3"
+        component={Client}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                color: focused ? "#00A854" : "white",
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              MS4
+            </Text>
+          ),
+        }}
+        name="ms4"
+        component={Client}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                color: focused ? "#00A854" : "white",
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              MS5
+            </Text>
+          ),
+        }}
+        name="ms5"
+        component={Client}
+      />
+    </Tab.Navigator>
+  );
+}
 
 const App = () => {
   return (
@@ -18,7 +137,7 @@ const App = () => {
         <NavigationContainer>
           <Stack.Navigator screenOptions={{ headerShown: false }}>
             <Stack.Screen name="login" component={Login} />
-            <Stack.Screen name="client" component={Client} />
+            <Stack.Screen name="home" component={Main} />
             <Stack.Screen name="admin" component={Admin} />
           </Stack.Navigator>
         </NavigationContainer>
