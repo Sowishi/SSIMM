@@ -203,6 +203,7 @@ const MS3 = ({ navigation }) => {
               elevation: 1,
               borderRadius: 10,
               marginBottom: 20,
+              width: screenWidth - 30,
             }}
           >
             <LineChart
