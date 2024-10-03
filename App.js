@@ -15,6 +15,7 @@ import MS2 from "./screens/ms2";
 import MS3 from "./screens/ms3";
 import MS4 from "./screens/ms4";
 import MS5 from "./screens/ms5";
+import About from "./screens/about";
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -50,7 +51,7 @@ function Main() {
             <Text
               style={{
                 color: focused ? "#00A854" : "white",
-                fontSize: 15,
+                fontSize: 12,
                 fontWeight: "bold",
               }}
             >
@@ -67,7 +68,7 @@ function Main() {
             <Text
               style={{
                 color: focused ? "#00A854" : "white",
-                fontSize: 15,
+                fontSize: 12,
                 fontWeight: "bold",
               }}
             >
@@ -84,7 +85,7 @@ function Main() {
             <Text
               style={{
                 color: focused ? "#00A854" : "white",
-                fontSize: 15,
+                fontSize: 12,
                 fontWeight: "bold",
               }}
             >
@@ -101,7 +102,7 @@ function Main() {
             <Text
               style={{
                 color: focused ? "#00A854" : "white",
-                fontSize: 15,
+                fontSize: 12,
                 fontWeight: "bold",
               }}
             >
@@ -118,7 +119,7 @@ function Main() {
             <Text
               style={{
                 color: focused ? "#00A854" : "white",
-                fontSize: 15,
+                fontSize: 12,
                 fontWeight: "bold",
               }}
             >
@@ -126,8 +127,25 @@ function Main() {
             </Text>
           ),
         }}
-        name="ms5"
+        name="angle"
         component={MS5}
+      />
+      <Tab.Screen
+        options={{
+          tabBarLabel: ({ focused }) => (
+            <Text
+              style={{
+                color: focused ? "#00A854" : "white",
+                fontSize: 12,
+                fontWeight: "bold",
+              }}
+            >
+              About
+            </Text>
+          ),
+        }}
+        name="about"
+        component={About}
       />
     </Tab.Navigator>
   );
